@@ -9,9 +9,9 @@
 namespace TS\Web\JsonClient\Middleware;
 
 
+use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\RequestInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use function GuzzleHttp\Psr7\stream_for;
 
 
 class SerializeRequestBodyMiddleware
@@ -40,7 +40,7 @@ class SerializeRequestBodyMiddleware
         $json = $this->serializer
             ->serialize($options['data'], 'json', $context);
 
-        $body = stream_for($json);
+        $body = Utils::streamFor($json);
 
         $request = $request
             ->withHeader('Content-Type', 'application/json')
