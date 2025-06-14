@@ -10,11 +10,11 @@ namespace TS\Web\JsonClient\Middleware;
 
 
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use TS\Web\JsonClient\HttpLogging\HttpNullLogger;
-use function GuzzleHttp\Promise\rejection_for;
 
 
 /**
@@ -61,7 +61,7 @@ class HttpLoggingMiddleware
                 $transferTimeSeconds = $transferStart + microtime(true);
                 $logger->logFailure($request, $response, $reason, $options, $transferTimeSeconds);
 
-                return rejection_for($reason);
+                return Create::rejectionFor($reason);
             });
         };
     }
