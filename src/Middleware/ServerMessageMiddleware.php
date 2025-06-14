@@ -9,13 +9,13 @@
 namespace TS\Web\JsonClient\Middleware;
 
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Psr7\Utils;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use TS\Web\JsonClient\Exception\ServerMessageException;
 use TS\Web\JsonClient\Exception\UnexpectedResponseException;
 use function GuzzleHttp\json_decode;
-use function GuzzleHttp\Psr7\stream_for;
 
 
 /**
@@ -71,7 +71,7 @@ class ServerMessageMiddleware
         $body = $response->getBody()->getContents();
 
         // restore response body
-        $response = $response->withBody(stream_for($body));
+        $response = $response->withBody(Utils::streamFor($body));
 
         try {
 

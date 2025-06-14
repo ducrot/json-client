@@ -15,6 +15,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
@@ -23,7 +24,6 @@ use TS\Web\JsonClient\Exception\ServerMessageException;
 use TS\Web\JsonClient\Exception\UnexpectedResponseException;
 use TS\Web\JsonClient\Fixtures\Payload;
 use TS\Web\JsonClient\Fixtures\TestClient;
-use function GuzzleHttp\Psr7\stream_for;
 
 
 class AbstractClientTest extends TestCase
@@ -58,7 +58,7 @@ class AbstractClientTest extends TestCase
     {
         $history = [];
         $this->handlerStack->push(Middleware::history($history));
-        $this->mockHandler->append(new Response(200, ['Content-Type' => 'application/json'], stream_for('{"message":"Hello"}')));
+        $this->mockHandler->append(new Response(200, ['Content-Type' => 'application/json'], Utils::streamFor('{"message":"Hello"}')));
 
         $this->client->getBodyString();
 
@@ -78,7 +78,7 @@ class AbstractClientTest extends TestCase
             ->willThrowException(new \RuntimeException('serializer error'));
 
         $this->mockHandler->append(
-            new Response(200, ['Content-Type' => 'application/json'], stream_for('placeholder-payload-json'))
+            new Response(200, ['Content-Type' => 'application/json'], Utils::streamFor('placeholder-payload-json'))
         );
 
         $this->expectException(UnexpectedResponseException::class);
@@ -98,7 +98,7 @@ class AbstractClientTest extends TestCase
             ->willReturn($payload);
 
         $this->mockHandler->append(
-            new Response(200, ['Content-Type' => 'application/json'], stream_for('placeholder-payload-json'))
+            new Response(200, ['Content-Type' => 'application/json'], Utils::streamFor('placeholder-payload-json'))
         );
 
         $result = $this->client->getPayload();
@@ -201,7 +201,7 @@ class AbstractClientTest extends TestCase
             new Response(
                 $responseStatus,
                 ['Content-Type' => 'application/json'],
-                stream_for($responseBody)
+                Utils::streamFor($responseBody)
             )
         );
 
