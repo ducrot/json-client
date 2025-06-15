@@ -36,9 +36,15 @@ class MyClient extends AbstractApiClient {
      */
     public function get(int $id):Model
     {
-        return $this->http->get('model/'.$id, [
+        $response $this->http->get('model/'.$id, [
             'deserialize_to' => Model::class
         ]);
+
+        if (!$response instanceof DeserializedResponse) {
+            throw new \RuntimeException('Expected a DeserializedResponse, got: '.get_class($response));
+        }
+
+        return $response->getDeserializedData();
     }
 
 

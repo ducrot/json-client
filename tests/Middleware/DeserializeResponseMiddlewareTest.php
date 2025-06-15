@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\SerializerInterface;
 use TS\Web\JsonClient\Exception\UnexpectedResponseException;
 use TS\Web\JsonClient\Fixtures\Payload;
+use TS\Web\JsonClient\HttpMessage\DeserializedResponse;
 
 class DeserializeResponseMiddlewareTest extends TestCase
 {
@@ -45,8 +46,9 @@ class DeserializeResponseMiddlewareTest extends TestCase
 
         $promise = $this->middleware->__invoke($request, $options);
         $response = $promise->wait();
+        $this->assertInstanceOf(DeserializedResponse::class, $response);
 
-        $this->assertSame($payload, $response);
+        $this->assertSame($payload, $response->getDeserializedData());
     }
 
     public function testNonJsonResponseThrowsException()
