@@ -11,6 +11,7 @@ namespace TS\Web\JsonClient\Fixtures;
 
 use TS\Web\JsonClient\AbstractApiClient;
 use TS\Web\JsonClient\Exception\ResponseExpector;
+use TS\Web\JsonClient\HttpMessage\DeserializedResponse;
 
 class TestClient extends AbstractApiClient
 {
@@ -42,9 +43,15 @@ class TestClient extends AbstractApiClient
 
     public function getPayload(): Payload
     {
-        return $this->http->get('get-payload', [
+        $response = $this->http->get('get-payload', [
             'deserialize_to' => Payload::class
         ]);
+
+        if (!$response instanceof DeserializedResponse) {
+            throw new \RuntimeException('Expected a DeserializedResponse, got: '.get_class($response));
+        }
+
+        return $response->getDeserializedData();
     }
 
 

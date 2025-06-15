@@ -13,6 +13,7 @@ use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use TS\Web\JsonClient\HttpMessage\DeserializedResponse;
 
 
 /**
@@ -91,17 +92,17 @@ class DeserializeResponseMiddleware
 
             if (is_string($deserialize_to)) {
 
-                return $deserializer->deserializeBody($deserialize_to);
+                $deserialized = $deserializer->deserializeBody($deserialize_to);
+                $response = new DeserializedResponse($response, $deserialized);
 
             } else if (is_callable($deserialize_to)) {
 
-                return $deserialize_to($deserializer);
-
-            } else {
-
-                return $response;
+                $deserialized = $deserialize_to($deserializer);
+                $response = new DeserializedResponse($response, $deserialized);
 
             }
+
+            return $response;
         });
 
     }

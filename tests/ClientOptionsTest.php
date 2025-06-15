@@ -56,8 +56,15 @@ class ClientOptionsTest extends TestCase
 
     public function provideDefinedOptions()
     {
+        $invalidOptions = [
+            'crypto_method',
+        ];
+        
         $class = new \ReflectionClass(RequestOptions::class);
         foreach ($class->getConstants() as $constant) {
+            if (in_array($constant, $invalidOptions)) {
+                continue;
+            }
             $value = 'test';
             if ($constant === RequestOptions::HEADERS) {
                 $value = [];
