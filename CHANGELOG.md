@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.0.0] - 2025-06-15
+
+### Added
+
+- Add Guzzle 7 support
+- Add Symfony 5 and 6 support
+- Add unit tests for middleware classes
+
+### Changed
+
+- **Breaking:** Refactor deserialization middleware for compatibility with Guzzle 7. `DeserializeResponseMiddleware` now always returns a `Psr\Http\Message\ResponseInterface`. Previously, it returned the deserialized data directly. Refer to the updated [README.md](README.md) for guidance on using the new middleware behavior.
+- Replace deprecated `stream_for` usage with `Utils::streamFor`
+- Replace deprecated `rejection_for` with `Create::rejectionFor`
+
+### Removed
+
+- **Breaking:** Remove PHP 7 compatibility
+- **Breaking:** Remove Symfony 4 support
+
+
 ## [2.1.0] - 2023-04-17
 
 ### Added
